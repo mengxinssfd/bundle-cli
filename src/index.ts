@@ -32,8 +32,11 @@ const Fs = require("fs");
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
 
     const libraryName = params.get("libraryName") as string || String(Date.now());
-    const plugins = [terser()];
+    const plugins = [];
     try {
+        if (params.has("terser")) {
+            plugins.push(terser());
+        }
         if (params.has("babel")) {
             plugins.unshift(babel({
                 extensions: [".js"],
