@@ -1,0 +1,36 @@
+{
+  "name": "compress-js",
+  "version": "1.0.0",
+  "description": "compress js",
+  "main": "index.js",
+  "bin": {
+    "compress-js": "bin/index"
+  },
+  "scripts": {
+    "test": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mengxinssfd/compress-js.git"
+  },
+  "keywords": [
+    "compress",
+    "js"
+  ],
+  "author": "dyh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mengxinssfd/compress-js/issues"
+  },
+  "homepage": "https://github.com/mengxinssfd/compress-js#readme",
+  "devDependencies": {
+    "@types/node": "^16.0.0",
+    "@types/rollup": "^0.54.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.14.6",
+    "@rollup/plugin-babel": "^5.3.0",
+    "rollup": "^2.52.7",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}
