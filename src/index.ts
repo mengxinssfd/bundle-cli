@@ -74,7 +74,7 @@ const Fs = require("fs");
             }));
             plugins.unshift(resolve());
             if (!isExistBabelRc) {
-                const tpl = `{"presets": [["${Path.posix.resolve(__dirname, "../node_modules/@babel/preset-env")}", {"modules": false, "loose": true}]]}`;
+                const tpl = `{"presets": [["${Path.resolve(__dirname, "../node_modules/@babel/preset-env")}", {"modules": false, "loose": true}]]}`;
                 Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, "/"));
             }
         }
