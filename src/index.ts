@@ -12,20 +12,26 @@ const Path = require("path");
 const Fs = require("fs");
 
 (async function () {
-
     const params = getParams();
-    const input: string = params.has("input") ? params.get("input") as string : (params.get("default") as string[])[0];
-    let output: string = params.has("output") ? params.get("output") as string : (params.get("default") as string[])[1];
+    const ipt = params.get("input") || params.get("default");
+    const input: string = Array.isArray(ipt) ? ipt[0] : ipt as string;
+    let output: string = params.get("output") as string || (Array.isArray(ipt) ? ipt[1] : "");
 
     const currentPath = Path.resolve("./");
-    console.log("执行命令所在目录", currentPath);
-    console.log("入口", input);
+    console.log("command dir：", currentPath);
+    console.log("entry：", input);
 
     if (!Fs.existsSync(input)) {
-        throw new Error(`入口：${input} 不存在`);
+        throw new Error(`entry：${input} is not exists`);
+    }
+    const fileDir = Path.dirname(input);
+
+    // 默认输出文件名为输入文件名.min.js
+    if (!output) {
+        output = Path.resolve(fileDir, Path.basename(input, ".js") + ".min.js");
+        console.log("default output path：", output);
     }
 
-    const fileDir = Path.dirname(input);
     const babelRcPathFrom = Path.resolve(__dirname, "../.babelrc");
     const babelRcPathTo = Path.resolve(fileDir, ".babelrc");
 
@@ -58,7 +64,7 @@ const Fs = require("fs");
             format: 'umd',
             sourcemap: false,
         });
-        console.log(outputs[0].code);
+        // console.log(outputs[0].code);
     } finally {
         if (params.has("babel") && !isExistBabelRc) {
             Fs.rmSync(babelRcPathTo);

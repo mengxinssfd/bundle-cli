@@ -10,21 +10,30 @@ const Path = require("path");
 const Fs = require("fs");
 (async function () {
     const params = utils_1.getParams();
-    const input = params.has("input") ? params.get("input") : params.get("default")[0];
-    let output = params.has("output") ? params.get("output") : params.get("default")[1];
+    const ipt = params.get("input") || params.get("default");
+    const input = Array.isArray(ipt) ? ipt[0] : ipt;
+    let output = params.get("output") || (Array.isArray(ipt) ? ipt[1] : "");
     const currentPath = Path.resolve("./");
-    console.log("执行命令所在目录", currentPath);
-    console.log("入口", input);
+    console.log("command dir：", currentPath);
+    console.log("entry：", input);
     if (!Fs.existsSync(input)) {
-        throw new Error(`入口：${input} 不存在`);
+        throw new Error(`entry：${input} is not exists`);
     }
     const fileDir = Path.dirname(input);
+    // 默认输出文件名为输入文件名.min.js
+    if (!output) {
+        output = Path.resolve(fileDir, Path.basename(input, ".js") + ".min.js");
+        console.log("default output path：", output);
+    }
     const babelRcPathFrom = Path.resolve(__dirname, "../.babelrc");
     const babelRcPathTo = Path.resolve(fileDir, ".babelrc");
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
     const libraryName = params.get("libraryName") || String(Date.now());
-    const plugins = [rollup_plugin_terser_1.terser()];
+    const plugins = [];
     try {
+        if (params.has("terser")) {
+            plugins.push(rollup_plugin_terser_1.terser());
+        }
         if (params.has("babel")) {
             plugins.unshift(plugin_babel_1.default({
                 extensions: [".js"],
@@ -44,7 +53,7 @@ const Fs = require("fs");
             format: 'umd',
             sourcemap: false,
         });
-        console.log(outputs[0].code);
+        // console.log(outputs[0].code);
     }
     finally {
         if (params.has("babel") && !isExistBabelRc) {
