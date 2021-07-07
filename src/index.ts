@@ -13,9 +13,25 @@ const Fs = require("fs");
 
 (async function () {
     const params = getParams();
-    const ipt = params.get("input") || params.get("default");
+
+    if (params.has("help") || params.has("h")) {
+        console.log(`
+            -input/-i          文件入口
+            -output/-o         输出文件
+            -help/-h           帮助
+            -terser/-t         压缩
+            -babel/-b          开启babel
+            -libraryName/name  打包后的名字，默认是时间戳
+        `);
+        return;
+    }
+
+    const useBabel = params.has("babel") || params.has("b");
+    const useTerser = params.has("terser") || params.has("t");
+
+    const ipt = params.get("input") || params.get("i") || params.get("default");
     const input: string = Array.isArray(ipt) ? ipt[0] : ipt as string;
-    let output: string = params.get("output") as string || (Array.isArray(ipt) ? ipt[1] : "");
+    let output: string = params.get("output") as string || params.get("o") as string || (Array.isArray(ipt) ? ipt[1] : "");
 
     const currentPath = Path.resolve("./");
     console.log("command dir：", currentPath);
@@ -32,25 +48,30 @@ const Fs = require("fs");
         console.log("default output path：", output);
     }
 
-    const babelRcPathFrom = Path.resolve(__dirname, "../.babelrc");
+    // const babelRcPathFrom = Path.resolve(__dirname, "../.babelrc");
     const babelRcPathTo = Path.resolve(fileDir, ".babelrc");
 
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
 
-    const libraryName = params.get("libraryName") as string || String(Date.now());
+    const libraryName = params.get("libraryName") as string || params.get("name") as string || String(Date.now());
     const plugins = [];
     try {
-        if (params.has("terser")) {
+        // 压缩
+        if (useTerser) {
             plugins.push(terser());
         }
-        if (params.has("babel")) {
+        // babel
+        if (useBabel) {
             plugins.unshift(babel({
                 extensions: [".js"],
                 exclude: "node_modules/*",
                 babelHelpers: "bundled",
             }));
             plugins.unshift(resolve());
-            !isExistBabelRc && await Fs.copyFileSync(babelRcPathFrom, babelRcPathTo);
+            if (!isExistBabelRc) {
+                const tpl = `{"presets": [["${Path.posix.resolve(__dirname, "../node_modules/@babel/preset-env")}", {"modules": false, "loose": true}]]}`;
+                Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, "/"));
+            }
         }
 
 
@@ -66,7 +87,7 @@ const Fs = require("fs");
         });
         // console.log(outputs[0].code);
     } finally {
-        if (params.has("babel") && !isExistBabelRc) {
+        if (useBabel && !isExistBabelRc) {
             Fs.rmSync(babelRcPathTo);
         }
     }
