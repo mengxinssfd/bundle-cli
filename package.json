@@ -1,5 +1,5 @@
 {
-  "name": "compress-js",
+  "name": "@mxssfd/compress-js",
   "version": "1.0.0",
   "description": "compress js",
   "main": "index.js",
