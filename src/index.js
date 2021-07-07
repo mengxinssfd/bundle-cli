@@ -10,6 +10,11 @@ const Path = require("path");
 const Fs = require("fs");
 (async function () {
     const params = utils_1.getParams();
+    console.log("-------------------------");
+    console.log(__dirname);
+    console.log(__filename);
+    console.log(process.cwd());
+    console.log("-------------------------");
     if (params.has("help") || params.has("h")) {
         console.log(`
             -input/-i          文件入口
