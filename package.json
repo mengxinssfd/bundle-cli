@@ -1,28 +1,29 @@
 {
-  "name": "@mxssfd/compress-js",
+  "name": "@mxssfd/bundle-cli",
   "version": "1.3.0",
-  "description": "compress js",
+  "description": "bundle compress js",
   "main": "index.js",
   "bin": {
-    "compress-js": "bin/index"
+    "bundle-cli": "bin/index"
   },
   "scripts": {
     "test": "rollup -c"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mengxinssfd/compress-js.git"
+    "url": "git+https://github.com/mengxinssfd/bundle-cli.git"
   },
   "keywords": [
     "compress",
+    "bundle",
     "js"
   ],
   "author": "dyh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mengxinssfd/compress-js/issues"
+    "url": "https://github.com/mengxinssfd/bundle-cli/issues"
   },
-  "homepage": "https://github.com/mengxinssfd/compress-js#readme",
+  "homepage": "https://github.com/mengxinssfd/bundle-cli#readme",
   "devDependencies": {
     "@types/node": "^16.0.0",
     "@types/rollup": "^0.54.0"
