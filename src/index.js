@@ -10,11 +10,6 @@ const Path = require("path");
 const Fs = require("fs");
 (async function () {
     const params = utils_1.getParams();
-    console.log("-------------------------");
-    console.log(__dirname);
-    console.log(__filename);
-    console.log(process.cwd());
-    console.log("-------------------------");
     if (params.has("help") || params.has("h")) {
         console.log(`
             -input/-i          文件入口
@@ -32,16 +27,16 @@ const Fs = require("fs");
     const input = Array.isArray(ipt) ? ipt[0] : ipt;
     let output = params.get("output") || params.get("o") || (Array.isArray(ipt) ? ipt[1] : "");
     const currentPath = Path.resolve("./");
-    console.log("command dir：", currentPath);
-    console.log("entry：", input);
+    console.log("command dir: ", currentPath);
+    console.log("entry: ", input);
     if (!Fs.existsSync(input)) {
-        throw new Error(`entry：${input} is not exists`);
+        throw new Error(`entry: ${input} is not exists`);
     }
     const fileDir = Path.dirname(input);
     // 默认输出文件名为输入文件名.min.js
     if (!output) {
         output = Path.resolve(fileDir, Path.basename(input, ".js") + ".min.js");
-        console.log("default output path：", output);
+        console.log("default output path: ", output);
     }
     // const babelRcPathFrom = Path.resolve(__dirname, "../.babelrc");
     const babelRcPathTo = Path.resolve(fileDir, ".babelrc");
@@ -62,7 +57,9 @@ const Fs = require("fs");
             }));
             plugins.unshift(resolve());
             if (!isExistBabelRc) {
-                const tpl = `{"presets": [["${Path.resolve(__dirname, "../node_modules/@babel/preset-env")}", {"modules": false, "loose": true}]]}`;
+                const envPath = Path.resolve(__dirname, "../node_modules/@babel/preset-env");
+                console.log("env path: ", envPath);
+                const tpl = `{"presets": [["${envPath}", {"modules": false, "loose": true}]]}`;
                 Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, "/"));
             }
         }

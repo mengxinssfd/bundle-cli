@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/bundle-cli",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "bundle compress js",
   "main": "index.js",
   "bin": {
