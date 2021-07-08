@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseCmdParams = exports.getParams = exports.typeOf = void 0;
+exports.createEnumByObj = exports.parseCmdParams = exports.getParams = exports.typeOf = void 0;
 function typeOf(target) {
     const tp = typeof target;
     if (tp !== "object")
@@ -64,3 +64,15 @@ function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
     return map;
 }
 exports.parseCmdParams = parseCmdParams;
+function createEnumByObj(obj) {
+    const res = {};
+    for (let k in obj) {
+        if (res.hasOwnProperty(k))
+            throw new Error("key multiple");
+        res[res[k] = obj[k]] = k;
+    }
+    Object.freeze(res); // freeze值不可变
+    // Object.seal(result); // seal值可以变
+    return res;
+}
+exports.createEnumByObj = createEnumByObj;

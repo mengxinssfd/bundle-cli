@@ -9,12 +9,15 @@ const Path = require("path");
 const Fs = require("fs");
 
 type Option = {
-    input?: string,
-    output?: string,
-    libraryName: string,
-    terser: boolean,
-    babel: boolean,
-    uglify: boolean,
+    input?: string;
+    output?: string;
+    libraryName: string;
+    terser: boolean;
+    babel: boolean;
+    uglify: boolean;
+    dropConsole: boolean;
+    dropDebugger: boolean;
+    module?: string;
 }
 export default async function bundleStart(option: Option) {
     if (!option.input || !Fs.existsSync(option.input)) {
@@ -45,7 +48,7 @@ export default async function bundleStart(option: Option) {
             plugins.unshift(resolve());
             if (!isExistBabelRc) {
                 const envPath = Path.resolve(__dirname, "../node_modules/@babel/preset-env");
-                console.log("env path: ", envPath);
+                // console.log("env path: ", envPath);
                 const tpl = `{"presets": [["${envPath}", {"modules": false, "loose": true}]]}`;
                 Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, "/"));
             }
@@ -53,7 +56,13 @@ export default async function bundleStart(option: Option) {
 
         // uglify-js 包含terser和babel的效果
         if (option.uglify) {
-            plugins.unshift(uglify({}, minify));
+            // eval压缩是用的http://dean.edwards.name/packer/
+            plugins.unshift(uglify({
+                compress: {
+                    drop_console: option.dropConsole,
+                    drop_debugger: option.dropDebugger,
+                },
+            }, minify));
         }
 
         const rs = await rollup.rollup({
@@ -63,7 +72,7 @@ export default async function bundleStart(option: Option) {
         const {output: outputs} = await rs.write({
             name: option.libraryName, // umd 模式必须要有 name  此属性作为全局变量访问打包结果
             file: option.output,
-            format: "umd",
+            format: typeof option.module === "string" ? option.module : "umd",
             sourcemap: false,
         });
         // console.log(outputs[0].code);

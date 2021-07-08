@@ -1,7 +1,7 @@
 export function inRange(value, [min = -Infinity, max = Infinity]) {
   return min <= value && value <= max;
 }
-
+// comments 1111111111111111
 export function typeOf(target) {
   const tp = typeof target;
   if (tp !== "object")

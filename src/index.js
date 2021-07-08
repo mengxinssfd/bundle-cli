@@ -36,14 +36,20 @@ async function bundleStart(option) {
             plugins.unshift(resolve());
             if (!isExistBabelRc) {
                 const envPath = Path.resolve(__dirname, "../node_modules/@babel/preset-env");
-                console.log("env path: ", envPath);
+                // console.log("env path: ", envPath);
                 const tpl = `{"presets": [["${envPath}", {"modules": false, "loose": true}]]}`;
                 Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, "/"));
             }
         }
         // uglify-js 包含terser和babel的效果
         if (option.uglify) {
-            plugins.unshift(uglify({}, uglify_js_1.minify));
+            // eval压缩是用的http://dean.edwards.name/packer/
+            plugins.unshift(uglify({
+                compress: {
+                    drop_console: option.dropConsole,
+                    drop_debugger: option.dropDebugger,
+                },
+            }, uglify_js_1.minify));
         }
         const rs = await rollup.rollup({
             input: option.input,
@@ -52,7 +58,7 @@ async function bundleStart(option) {
         const { output: outputs } = await rs.write({
             name: option.libraryName,
             file: option.output,
-            format: "umd",
+            format: typeof option.module === "string" ? option.module : "umd",
             sourcemap: false,
         });
         // console.log(outputs[0].code);

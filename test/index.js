@@ -1,7 +1,7 @@
 import * as utils from "./utils";
 
 console.log(utils.inRange(100, [20]));
-
+debugger
 console.log(utils.isArray({}));
 console.log(utils.isArray(utils.isNumber([])));
 const a = 10;

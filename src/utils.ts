@@ -62,3 +62,15 @@ export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "defaul
     }
     return map;
 }
+
+export function createEnumByObj<T extends object, K extends keyof T, O extends { [k: string]: K }>(obj: T): T & { [k: string]: K } {
+    const res: any = {};
+    for (let k in obj) {
+        if (res.hasOwnProperty(k)) throw new Error("key multiple");
+        res[res[k] = obj[k]] = k;
+    }
+
+    Object.freeze(res); // freeze值不可变
+    // Object.seal(result); // seal值可以变
+    return res;
+}
