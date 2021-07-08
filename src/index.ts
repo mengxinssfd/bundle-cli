@@ -20,7 +20,8 @@ const Fs = require("fs");
             -help/-h           帮助
             -terser/-t         压缩
             -babel/-b          开启babel
-            -libraryName/name  打包后的名字，默认是时间戳
+            -libraryName/-name 打包后的名字，默认是时间戳
+            -uglify/-u         开启uglify
         `);
         return;
     }
@@ -76,7 +77,7 @@ const Fs = require("fs");
         }
 
         // uglify-js 包含terser和babel的效果
-        if (params.has("uglify")) {
+        if (params.has("uglify") || params.has("u")) {
             plugins.unshift(uglify({}, minify));
         }
 
