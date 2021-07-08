@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("./utils");
 const plugin_babel_1 = require("@rollup/plugin-babel");
 const rollup_plugin_terser_1 = require("rollup-plugin-terser");
+const uglify_js_1 = require("uglify-js");
+const { uglify } = require('rollup-plugin-uglify');
 const resolve = require('rollup-plugin-node-resolve');
 const rollup = require("rollup");
 const Path = require("path");
@@ -62,6 +64,9 @@ const Fs = require("fs");
                 const tpl = `{"presets": [["${envPath}", {"modules": false, "loose": true}]]}`;
                 Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, "/"));
             }
+        }
+        if (params.has("uglify")) {
+            plugins.unshift(uglify({}, uglify_js_1.minify));
         }
         const rs = await rollup.rollup({
             input,

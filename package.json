@@ -1,6 +1,6 @@
 {
   "name": "@mxssfd/bundle-cli",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "description": "bundle compress js",
   "main": "index.js",
   "bin": {
@@ -26,7 +26,8 @@
   "homepage": "https://github.com/mengxinssfd/bundle-cli#readme",
   "devDependencies": {
     "@types/node": "^16.0.0",
-    "@types/rollup": "^0.54.0"
+    "@types/rollup": "^0.54.0",
+    "@types/uglify-js": "^3.13.1"
   },
   "dependencies": {
     "@babel/core": "^7.14.6",
@@ -34,6 +35,8 @@
     "@rollup/plugin-babel": "^5.3.0",
     "rollup": "^2.52.7",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-uglify": "^6.0.4",
+    "uglify-js": "^3.13.10"
   }
 }

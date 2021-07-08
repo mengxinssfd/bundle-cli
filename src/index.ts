@@ -3,14 +3,13 @@
 import {getParams} from "./utils";
 import babel from '@rollup/plugin-babel';
 import {terser} from 'rollup-plugin-terser';
+import {minify} from "uglify-js";
 
+const {uglify} = require('rollup-plugin-uglify');
 const resolve = require('rollup-plugin-node-resolve');
-
 const rollup = require("rollup");
-
 const Path = require("path");
 const Fs = require("fs");
-
 (async function () {
     const params = getParams();
 
@@ -76,6 +75,10 @@ const Fs = require("fs");
             }
         }
 
+        // uglify-js 包含terser和babel的效果
+        if (params.has("uglify")) {
+            plugins.unshift(uglify({}, minify));
+        }
 
         const rs = await rollup.rollup({
             input,  // 入口文件

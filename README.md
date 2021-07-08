@@ -21,3 +21,7 @@ bundle-cli inputPath outputPath -terser
 ```shell
 bundle-cli inputPath outputPath -babel
 ```
+## uglify
+```shell
+bundle-cli inputPath outputPath -uglify
+```
