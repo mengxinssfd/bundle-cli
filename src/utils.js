@@ -1,9 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.execute = exports.getParams = exports.typeOf = void 0;
-const childProcess = require("child_process");
-const util = require("util");
-const exec = util.promisify(childProcess.exec);
+exports.parseCmdParams = exports.getParams = exports.typeOf = void 0;
 function typeOf(target) {
     const tp = typeof target;
     if (tp !== "object")
@@ -17,18 +14,30 @@ exports.typeOf = typeOf;
  * @param defaultKey 如果前面没有变量名那么使用默认
  */
 function getParams(prefix = "-", defaultKey = "default") {
+    return parseCmdParams(process.argv.slice(2), prefix, defaultKey);
+}
+exports.getParams = getParams;
+/**
+ * 命令行的参数转为Map
+ * @param arr 命令行参数数组
+ * @param prefix 前缀 --d --f 前缀是"--"
+ * @param defaultKey 如果前面没有变量名那么使用默认
+ */
+function parseCmdParams(arr, prefix = "-", defaultKey = "default") {
+    const list = arr.slice();
     let currentKey = defaultKey;
-    const keyReg = new RegExp(`^${prefix}`);
+    const isKeyReg = new RegExp(`^${prefix}`);
+    const eqReg = /([^=]+)=([\s\S]+)?/;
     const map = new Map();
-    process.argv.slice(2).forEach((it) => {
-        if (keyReg.test(it)) {
-            currentKey = it.replace(keyReg, "");
-            if (map.has(currentKey))
-                return;
-            map.set(currentKey, true);
-            return;
+    function getKey(key) {
+        if (eqReg.test(key)) {
+            key = RegExp.$1;
+            const value = RegExp.$2;
+            value && list.unshift(value);
         }
-        const currentValue = map.get(currentKey);
+        return key;
+    }
+    function setValue(currentValue) {
         switch (typeOf(currentValue)) {
             case "undefined":
             case "boolean":
@@ -40,16 +49,18 @@ function getParams(prefix = "-", defaultKey = "default") {
             default:
                 map.set(currentKey, [currentValue, it]);
         }
-    });
+    }
+    let it;
+    while (it = list.shift()) {
+        if (isKeyReg.test(it)) {
+            currentKey = getKey(it.replace(isKeyReg, ""));
+            if (!map.has(currentKey)) {
+                map.set(currentKey, true);
+            }
+            continue;
+        }
+        setValue(map.get(currentKey));
+    }
     return map;
 }
-exports.getParams = getParams;
-async function execute(cmd) {
-    // try {
-    const { stdout } = await exec(cmd);
-    console.log("success!");
-    // console.log('\n\n*************************命令输出start*************************');
-    console.log(stdout);
-    return stdout;
-}
-exports.execute = execute;
+exports.parseCmdParams = parseCmdParams;

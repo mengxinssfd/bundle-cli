@@ -1,6 +1,3 @@
-const childProcess = require("child_process");
-const util = require("util");
-const exec = util.promisify(childProcess.exec);
 export function typeOf(target: any): string {
     const tp = typeof target;
     if (tp !== "object") return tp;
@@ -12,18 +9,33 @@ export function typeOf(target: any): string {
  * @param prefix 前缀 --d --f 前缀是"--"
  * @param defaultKey 如果前面没有变量名那么使用默认
  */
-export function getParams(prefix = "-", defaultKey = "default"): Map<string, string[] | string | boolean> {
+export function getParams(prefix = "-", defaultKey = "default"): ReturnType<typeof parseCmdParams> {
+    return parseCmdParams(process.argv.slice(2), prefix, defaultKey);
+}
+
+/**
+ * 命令行的参数转为Map
+ * @param arr 命令行参数数组
+ * @param prefix 前缀 --d --f 前缀是"--"
+ * @param defaultKey 如果前面没有变量名那么使用默认
+ */
+export function parseCmdParams(arr: string[], prefix = "-", defaultKey = "default"): Map<string, string[] | string | boolean> {
+    const list = arr.slice();
     let currentKey = defaultKey;
-    const keyReg = new RegExp(`^${prefix}`);
-    const map: ReturnType<typeof getParams> = new Map();
-    process.argv.slice(2).forEach((it) => {
-        if (keyReg.test(it)) {
-            currentKey = it.replace(keyReg, "");
-            if (map.has(currentKey)) return;
-            map.set(currentKey, true);
-            return;
+    const isKeyReg = new RegExp(`^${prefix}`);
+    const eqReg = /([^=]+)=([\s\S]+)?/;
+    const map: ReturnType<typeof parseCmdParams> = new Map();
+
+    function getKey(key: string): string {
+        if (eqReg.test(key)) {
+            key = RegExp.$1;
+            const value = RegExp.$2;
+            value && list.unshift(value);
         }
-        const currentValue = map.get(currentKey);
+        return key;
+    }
+
+    function setValue(currentValue?: string[] | string | boolean) {
         switch (typeOf(currentValue)) {
             case "undefined":
             case "boolean":
@@ -35,15 +47,18 @@ export function getParams(prefix = "-", defaultKey = "default"): Map<string, str
             default:
                 map.set(currentKey, [currentValue as string, it]);
         }
-    });
-    return map;
-}
+    }
 
-export async function execute(cmd: string): Promise<string> {
-    // try {
-    const {stdout} = await exec(cmd);
-    console.log("success!");
-    // console.log('\n\n*************************命令输出start*************************');
-    console.log(stdout);
-    return stdout;
+    let it: string;
+    while (it = list.shift() as string) {
+        if (isKeyReg.test(it)) {
+            currentKey = getKey(it.replace(isKeyReg, ""));
+            if (!map.has(currentKey)) {
+                map.set(currentKey, true);
+            }
+            continue;
+        }
+        setValue(map.get(currentKey));
+    }
+    return map;
 }
