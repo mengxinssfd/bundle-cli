@@ -1,58 +1,33 @@
 "use strict";
-// tsc src/index.ts --target ES2017 --module commonjs
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = require("./utils");
 const plugin_babel_1 = require("@rollup/plugin-babel");
 const rollup_plugin_terser_1 = require("rollup-plugin-terser");
 const uglify_js_1 = require("uglify-js");
-const { uglify } = require('rollup-plugin-uglify');
-const resolve = require('rollup-plugin-node-resolve');
+const { uglify } = require("rollup-plugin-uglify");
+const resolve = require("rollup-plugin-node-resolve");
 const rollup = require("rollup");
 const Path = require("path");
 const Fs = require("fs");
-(async function () {
-    const params = utils_1.getParams();
-    if (params.has("help") || params.has("h")) {
-        console.log(`
-            -input/-i          文件入口
-            -output/-o         输出文件
-            -help/-h           帮助
-            -terser/-t         压缩
-            -babel/-b          开启babel
-            -libraryName/-name 打包后的名字，默认是时间戳
-            -uglify/-u         开启uglify
-        `);
-        return;
+async function bundleStart(option) {
+    if (!option.input || !Fs.existsSync(option.input)) {
+        throw new Error(`entry: ${option.input} is not exists`);
     }
-    const useBabel = params.has("babel") || params.has("b");
-    const useTerser = params.has("terser") || params.has("t");
-    const ipt = params.get("input") || params.get("i") || params.get("default");
-    const input = Array.isArray(ipt) ? ipt[0] : ipt;
-    let output = params.get("output") || params.get("o") || (Array.isArray(ipt) ? ipt[1] : "");
-    const currentPath = Path.resolve("./");
-    console.log("command dir: ", currentPath);
-    console.log("entry: ", input);
-    if (!Fs.existsSync(input)) {
-        throw new Error(`entry: ${input} is not exists`);
-    }
-    const fileDir = Path.dirname(input);
-    // 默认输出文件名为输入文件名.min.js
-    if (!output) {
-        output = Path.resolve(fileDir, Path.basename(input, ".js") + ".min.js");
-        console.log("default output path: ", output);
-    }
-    // const babelRcPathFrom = Path.resolve(__dirname, "../.babelrc");
+    const fileDir = Path.dirname(option.input);
     const babelRcPathTo = Path.resolve(fileDir, ".babelrc");
+    // 默认输出文件名为输入文件名.min.js
+    if (!option.output) {
+        option.output = Path.resolve(fileDir, Path.basename(option.input, ".js") + ".min.js");
+        console.log("default output path: ", option.output);
+    }
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
-    const libraryName = params.get("libraryName") || params.get("name") || String(Date.now());
     const plugins = [];
     try {
         // 压缩
-        if (useTerser) {
+        if (option.terser) {
             plugins.push(rollup_plugin_terser_1.terser());
         }
         // babel
-        if (useBabel) {
+        if (option.babel) {
             plugins.unshift(plugin_babel_1.default({
                 extensions: [".js"],
                 exclude: "node_modules/*",
@@ -67,24 +42,25 @@ const Fs = require("fs");
             }
         }
         // uglify-js 包含terser和babel的效果
-        if (params.has("uglify") || params.has("u")) {
+        if (option.uglify) {
             plugins.unshift(uglify({}, uglify_js_1.minify));
         }
         const rs = await rollup.rollup({
-            input,
-            plugins
+            input: option.input,
+            plugins,
         });
         const { output: outputs } = await rs.write({
-            name: libraryName,
-            file: output,
-            format: 'umd',
+            name: option.libraryName,
+            file: option.output,
+            format: "umd",
             sourcemap: false,
         });
         // console.log(outputs[0].code);
     }
     finally {
-        if (useBabel && !isExistBabelRc) {
+        if (option.babel && !isExistBabelRc) {
             Fs.rmSync(babelRcPathTo);
         }
     }
-})();
+}
+exports.default = bundleStart;
