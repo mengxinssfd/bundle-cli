@@ -22,18 +22,14 @@ async function bundleStart(option) {
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
     const plugins = [];
     try {
-        // 压缩
-        if (option.terser) {
-            plugins.push(rollup_plugin_terser_1.terser());
-        }
         // babel
         if (option.babel) {
-            plugins.unshift(plugin_babel_1.default({
+            plugins.push(resolve());
+            plugins.push(plugin_babel_1.default({
                 extensions: [".js"],
                 exclude: "node_modules/*",
                 babelHelpers: "bundled",
             }));
-            plugins.unshift(resolve());
             if (!isExistBabelRc) {
                 const envPath = Path.resolve(__dirname, "../node_modules/@babel/preset-env");
                 // console.log("env path: ", envPath);
@@ -41,15 +37,29 @@ async function bundleStart(option) {
                 Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, "/"));
             }
         }
+        // 压缩
+        if (option.terser) {
+            plugins.push(rollup_plugin_terser_1.terser());
+        }
         // uglify-js 包含terser和babel的效果
         if (option.uglify) {
             // eval压缩是用的http://dean.edwards.name/packer/
-            plugins.unshift(uglify({
+            plugins.push(uglify({
                 compress: {
                     drop_console: option.dropConsole,
                     drop_debugger: option.dropDebugger,
                 },
             }, uglify_js_1.minify));
+        }
+        if (option.eval) {
+            // plugin顺序是从0开始到最后
+            plugins.push({
+                name: "",
+                renderChunk(code) {
+                    console.log("ssssssssssss", code);
+                    return code;
+                }
+            });
         }
         const rs = await rollup.rollup({
             input: option.input,

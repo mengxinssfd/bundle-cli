@@ -1,6 +1,7 @@
 import babel from "@rollup/plugin-babel";
 import {terser} from "rollup-plugin-terser";
 import {minify} from "uglify-js";
+import {Plugin} from "rollup";
 
 const {uglify} = require("rollup-plugin-uglify");
 const resolve = require("rollup-plugin-node-resolve");
@@ -9,15 +10,16 @@ const Path = require("path");
 const Fs = require("fs");
 
 type Option = {
-    input?: string;
+    input: string;
     output?: string;
-    libraryName: string;
-    terser: boolean;
-    babel: boolean;
-    uglify: boolean;
-    dropConsole: boolean;
-    dropDebugger: boolean;
+    libraryName?: string;
+    terser?: boolean;
+    babel?: boolean;
+    uglify?: boolean;
+    dropConsole?: boolean;
+    dropDebugger?: boolean;
     module?: string;
+    eval?: boolean;
 }
 export default async function bundleStart(option: Option) {
     if (!option.input || !Fs.existsSync(option.input)) {
@@ -32,20 +34,17 @@ export default async function bundleStart(option: Option) {
     }
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
 
-    const plugins = [];
+    const plugins: Plugin[] = [];
     try {
-        // 压缩
-        if (option.terser) {
-            plugins.push(terser());
-        }
         // babel
         if (option.babel) {
-            plugins.unshift(babel({
+            plugins.push(resolve());
+            plugins.push(babel({
                 extensions: [".js"],
                 exclude: "node_modules/*",
                 babelHelpers: "bundled",
             }));
-            plugins.unshift(resolve());
+
             if (!isExistBabelRc) {
                 const envPath = Path.resolve(__dirname, "../node_modules/@babel/preset-env");
                 // console.log("env path: ", envPath);
@@ -53,16 +52,32 @@ export default async function bundleStart(option: Option) {
                 Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, "/"));
             }
         }
+        // 压缩
+        if (option.terser) {
+            plugins.push(terser());
+        }
+
 
         // uglify-js 包含terser和babel的效果
         if (option.uglify) {
             // eval压缩是用的http://dean.edwards.name/packer/
-            plugins.unshift(uglify({
+            plugins.push(uglify({
                 compress: {
                     drop_console: option.dropConsole,
                     drop_debugger: option.dropDebugger,
                 },
             }, minify));
+        }
+
+        if (option.eval) {
+            // plugin顺序是从0开始到最后
+            plugins.push({
+                name: "",
+                renderChunk(code) {
+                    console.log("ssssssssssss", code);
+                    return code;
+                }
+            });
         }
 
         const rs = await rollup.rollup({
