@@ -62,7 +62,7 @@ const Path = require("path");
         terser: has("terser"),
         babel: has("babel"),
         uglify: has("uglify"),
-        module: get("module") as string,
+        module: get("module") as any,
         eval: has("eval"),
     });
 })();
