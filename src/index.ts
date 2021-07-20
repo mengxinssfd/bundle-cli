@@ -36,11 +36,31 @@ export default async function bundleStart(option: Option) {
 
     const plugins: Plugin[] = [];
     try {
+        const isTs = Path.extname(option.input) === ".ts";
+        // ts
+        if (isTs) {
+            const typescript = require("rollup-plugin-typescript2");
+            plugins.push(typescript({
+                // tsconfig:"tsconfig.webpack.json",
+                tsconfigOverride: {
+                    compilerOptions: {
+                        declaration: false, // 输出时去除类型文件
+                        module: "ESNext",
+                        target: "ES6"
+                    }
+                }
+            }));
+        }
+
         // babel
         if (option.babel) {
             plugins.push(resolve());
+            const extensions = [".js"];
+            if (isTs) {
+                extensions.push("ts");
+            }
             plugins.push(babel({
-                extensions: [".js"],
+                extensions,
                 exclude: "node_modules/*",
                 babelHelpers: "bundled"
             }));
@@ -73,7 +93,7 @@ export default async function bundleStart(option: Option) {
                 name: "",
                 renderChunk(code) {
                     const packer = require("../packer");
-                    return packer.pack(code);
+                    return packer.pack(code, true);
                 }
             });
         }
