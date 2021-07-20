@@ -104,7 +104,3 @@ dist
 .tern-port
 
 .idea
-.babelrc
-rollup.config.js
-tsconfig.json
-test
