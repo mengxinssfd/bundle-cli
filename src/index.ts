@@ -59,7 +59,6 @@ export default async function bundleStart(option: Option) {
 
         // uglify-js 包含terser和babel的效果
         if (option.uglify) {
-            // eval压缩是用的http://dean.edwards.name/packer/
             plugins.push(uglify({
                 compress: {
                     drop_console: option.dropConsole,
