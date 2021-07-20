@@ -75,7 +75,7 @@ export default async function bundleStart(option: Option) {
                 name: "",
                 renderChunk(code) {
                     const packer = require('../packer');
-                    return packer.pack(code);
+                    return packer.pack(code, true);
                 }
             });
         }
