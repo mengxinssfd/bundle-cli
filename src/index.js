@@ -56,8 +56,8 @@ async function bundleStart(option) {
             plugins.push({
                 name: "",
                 renderChunk(code) {
-                    console.log("ssssssssssss", code);
-                    return code;
+                    const packer = require('../packer');
+                    return packer.pack(code);
                 }
             });
         }

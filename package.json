@@ -1,13 +1,14 @@
 {
   "name": "@mxssfd/bundle-cli",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "bundle compress js",
   "main": "index.js",
   "bin": {
     "bundle-cli": "bin/index"
   },
   "files": [
-    "src/*.js"
+    "src/*.js",
+    "packer/index.js"
   ],
   "scripts": {
     "test": "rollup -c"

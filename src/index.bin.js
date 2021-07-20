@@ -20,6 +20,7 @@ const Path = require("path");
         uglify: "u",
         uglifyDropDebugger: "udd",
         uglifyDropConsole: "udc",
+        eval: "e",
     });
     function get(k) {
         return params.get(k) || params.get(ParamNames[k]);
@@ -34,8 +35,9 @@ const Path = require("path");
             -babel/-b                      开启babel
             -libraryName/-name             打包后的名字，默认是时间戳
             -uglify/-u                     开启uglify
-            -uglifyDropDebugger/-udd       删除debugger
-            -uglifyDropConsole/-udc        删除console
+            -uglifyDropDebugger/-udd       移除debugger
+            -uglifyDropConsole/-udc        移除console
+            -eval/-e                       eval parker模式
         `);
         return;
     }
@@ -55,5 +57,6 @@ const Path = require("path");
         babel: has("babel"),
         uglify: has("uglify"),
         module: get("module"),
+        eval: has("eval"),
     });
 })();

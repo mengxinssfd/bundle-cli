@@ -21,6 +21,7 @@ const Path = require("path");
         uglify: "u",
         uglifyDropDebugger: "udd",
         uglifyDropConsole: "udc",
+        eval: "e",
     });
 
     function get(k: keyof typeof ParamNames) {
@@ -39,6 +40,7 @@ const Path = require("path");
             -uglify/-u                     开启uglify
             -uglifyDropDebugger/-udd       移除debugger
             -uglifyDropConsole/-udc        移除console
+            -eval/-e                       eval parker模式
         `);
         return;
     }
@@ -61,5 +63,6 @@ const Path = require("path");
         babel: has("babel"),
         uglify: has("uglify"),
         module: get("module") as string,
+        eval: has("eval"),
     });
 })();
