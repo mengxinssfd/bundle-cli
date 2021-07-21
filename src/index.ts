@@ -29,7 +29,7 @@ export default async function bundleStart(option: Option) {
     const babelRcPathTo = Path.resolve(fileDir, ".babelrc");
     // 默认输出文件名为输入文件名.min.js
     if (!option.output) {
-        option.output = Path.resolve(fileDir, Path.basename(option.input, ".js") + ".min.js");
+        option.output = Path.resolve(fileDir, Path.basename(option.input, Path.extname(option.input)) + ".min.js");
         console.log("default output path: ", option.output);
     }
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
@@ -77,7 +77,7 @@ export default async function bundleStart(option: Option) {
             plugins.push(terser());
         }
 
-        // uglify-js 包含terser和babel的效果
+        // uglify-js 包含terser和部分babel的效果
         if (option.uglify) {
             plugins.push(uglify({
                 compress: {
