@@ -1,7 +1,7 @@
 import babel from "@rollup/plugin-babel";
 import {terser} from "rollup-plugin-terser";
 import {minify} from "uglify-js";
-import {Plugin} from "rollup";
+import {Plugin, ModuleFormat} from "rollup";
 
 const {uglify} = require("rollup-plugin-uglify");
 const resolve = require("rollup-plugin-node-resolve");
@@ -18,7 +18,7 @@ type Option = {
     uglify?: boolean;
     dropConsole?: boolean;
     dropDebugger?: boolean;
-    module?: string;
+    module?: ModuleFormat;
     eval?: boolean;
 }
 export default async function bundleStart(option: Option) {
@@ -36,13 +36,33 @@ export default async function bundleStart(option: Option) {
 
     const plugins: Plugin[] = [];
     try {
+        const isTs = Path.extname(option.input) === ".ts";
+        // ts
+        if (isTs) {
+            const typescript = require("rollup-plugin-typescript2");
+            plugins.push(typescript({
+                // tsconfig:"tsconfig.webpack.json",
+                tsconfigOverride: {
+                    compilerOptions: {
+                        declaration: false, // 输出时去除类型文件
+                        module: "ESNext",
+                        target: "ES6"
+                    }
+                }
+            }));
+        }
+
         // babel
         if (option.babel) {
             plugins.push(resolve());
+            const extensions = [".js"];
+            if (isTs) {
+                extensions.push("ts");
+            }
             plugins.push(babel({
-                extensions: [".js"],
+                extensions,
                 exclude: "node_modules/*",
-                babelHelpers: "bundled",
+                babelHelpers: "bundled"
             }));
 
             if (!isExistBabelRc) {
@@ -57,15 +77,13 @@ export default async function bundleStart(option: Option) {
             plugins.push(terser());
         }
 
-
         // uglify-js 包含terser和babel的效果
         if (option.uglify) {
-            // eval压缩是用的http://dean.edwards.name/packer/
             plugins.push(uglify({
                 compress: {
                     drop_console: option.dropConsole,
-                    drop_debugger: option.dropDebugger,
-                },
+                    drop_debugger: option.dropDebugger
+                }
             }, minify));
         }
 
@@ -74,7 +92,7 @@ export default async function bundleStart(option: Option) {
             plugins.push({
                 name: "",
                 renderChunk(code) {
-                    const packer = require('../packer');
+                    const packer = require("../packer");
                     return packer.pack(code, true);
                 }
             });
@@ -82,13 +100,14 @@ export default async function bundleStart(option: Option) {
 
         const rs = await rollup.rollup({
             input: option.input,  // 入口文件
-            plugins,
+            plugins
         });
-        const {output: outputs} = await rs.write({
-            name: option.libraryName, // umd 模式必须要有 name  此属性作为全局变量访问打包结果
-            file: option.output,
+        /*const {output: outputs} = */
+        await rs.write({
+            name: option.libraryName!, // umd 模式必须要有 name  此属性作为全局变量访问打包结果
+            file: option.output!,
             format: typeof option.module === "string" ? option.module : "umd",
-            sourcemap: false,
+            sourcemap: false
         });
         // console.log(outputs[0].code);
     } finally {

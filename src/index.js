@@ -22,13 +22,32 @@ async function bundleStart(option) {
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
     const plugins = [];
     try {
+        const isTs = Path.extname(option.input) === ".ts";
+        // ts
+        if (isTs) {
+            const typescript = require("rollup-plugin-typescript2");
+            plugins.push(typescript({
+                // tsconfig:"tsconfig.webpack.json",
+                tsconfigOverride: {
+                    compilerOptions: {
+                        declaration: false,
+                        module: "ESNext",
+                        target: "ES6"
+                    }
+                }
+            }));
+        }
         // babel
         if (option.babel) {
             plugins.push(resolve());
+            const extensions = [".js"];
+            if (isTs) {
+                extensions.push("ts");
+            }
             plugins.push(plugin_babel_1.default({
-                extensions: [".js"],
+                extensions,
                 exclude: "node_modules/*",
-                babelHelpers: "bundled",
+                babelHelpers: "bundled"
             }));
             if (!isExistBabelRc) {
                 const envPath = Path.resolve(__dirname, "../node_modules/@babel/preset-env");
@@ -43,12 +62,11 @@ async function bundleStart(option) {
         }
         // uglify-js 包含terser和babel的效果
         if (option.uglify) {
-            // eval压缩是用的http://dean.edwards.name/packer/
             plugins.push(uglify({
                 compress: {
                     drop_console: option.dropConsole,
-                    drop_debugger: option.dropDebugger,
-                },
+                    drop_debugger: option.dropDebugger
+                }
             }, uglify_js_1.minify));
         }
         if (option.eval) {
@@ -56,20 +74,21 @@ async function bundleStart(option) {
             plugins.push({
                 name: "",
                 renderChunk(code) {
-                    const packer = require('../packer');
+                    const packer = require("../packer");
                     return packer.pack(code, true);
                 }
             });
         }
         const rs = await rollup.rollup({
             input: option.input,
-            plugins,
+            plugins
         });
-        const { output: outputs } = await rs.write({
+        /*const {output: outputs} = */
+        await rs.write({
             name: option.libraryName,
             file: option.output,
             format: typeof option.module === "string" ? option.module : "umd",
-            sourcemap: false,
+            sourcemap: false
         });
         // console.log(outputs[0].code);
     }
