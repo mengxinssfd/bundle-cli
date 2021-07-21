@@ -36,10 +36,10 @@ const Path = require("path");
             -help/-h                       帮助
             -terser/-t                     压缩
             -babel/-b                      开启babel
-            -libraryName/-name             打包后的名字，默认是时间戳
+            -libraryName/-name             打包后的名字,默认是时间戳
             -uglify/-u                     开启uglify
-            -uglifyDropDebugger/-udd       移除debugger
-            -uglifyDropConsole/-udc        移除console
+            -uglifyDropDebugger/-udd       移除debugger,需开启uglify
+            -uglifyDropConsole/-udc        移除console,需开启uglify
             -eval/-e                       eval parker模式
         `);
         return;
