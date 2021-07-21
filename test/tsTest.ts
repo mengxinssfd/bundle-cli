@@ -1,6 +1,6 @@
 import * as utils from "./tsUtils";
 
-// TODO 在该页面调用过的函数会重复声明
+// TODO 在该页面调用过的函数会重复声明  是export * from "./utils"导致的重复
 console.log(utils.inRange(100, [20]));
 debugger
 console.log(utils.isArray({}));
@@ -21,4 +21,4 @@ if (rand > 1000) {
 
 console.log(o?.a ?? true);
 
-export * from "./utils";
+// export * from "./utils";
