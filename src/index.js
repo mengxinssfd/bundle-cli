@@ -84,9 +84,14 @@ async function bundleStart(option) {
             plugins
         });
         /*const {output: outputs} = */
+        const date = new Date();
         await rs.write({
             name: option.libraryName,
             file: option.output,
+            banner: "/*!\n" +
+                ` * ${option.libraryName}` +
+                ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}  ${date.getHours()}:${date.getMinutes()}\n ` +
+                ` */\n`,
             format: typeof option.module === "string" ? option.module : "umd",
             sourcemap: false
         });
