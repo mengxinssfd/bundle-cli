@@ -86,6 +86,12 @@ export default async function bundleStart(option: Option) {
                 }
             }, minify));
         }
+        const date = new Date();
+        const banner =
+            "/*!\n" +
+            ` * ${option.libraryName}\n` +
+            ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}\n` +
+            ` */\n`;
 
         if (option.eval) {
             // plugin顺序是从0开始到最后
@@ -93,7 +99,7 @@ export default async function bundleStart(option: Option) {
                 name: "",
                 renderChunk(code) {
                     const packer = require("../packer");
-                    return packer.pack(code, true);
+                    return banner+packer.pack(code, true);
                 }
             });
         }
@@ -103,16 +109,11 @@ export default async function bundleStart(option: Option) {
             plugins
         });
         /*const {output: outputs} = */
-        const date = new Date();
+
         await rs.write({
             name: option.libraryName!, // umd 模式必须要有 name  此属性作为全局变量访问打包结果
             file: option.output!,
-            banner:
-                "/*!\n" +
-                ` * ${option.libraryName}` +
-                ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}  ${date.getHours()}:${date.getMinutes()}\n ` +
-                ` */\n`
-            ,
+            banner,
             format: typeof option.module === "string" ? option.module : "umd",
             sourcemap: false
         });
