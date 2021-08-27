@@ -3,11 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const plugin_babel_1 = require("@rollup/plugin-babel");
 const rollup_plugin_terser_1 = require("rollup-plugin-terser");
 const uglify_js_1 = require("uglify-js");
+const utils_1 = require("./utils");
 const { uglify } = require("rollup-plugin-uglify");
 const resolve = require("rollup-plugin-node-resolve");
 const rollup = require("rollup");
 const Path = require("path");
 const Fs = require("fs");
+utils_1.useDateFormat();
 async function bundleStart(option) {
     if (!option.input || !Fs.existsSync(option.input)) {
         throw new Error(`entry: ${option.input} is not exists`);
@@ -20,6 +22,10 @@ async function bundleStart(option) {
         console.log("default output path: ", option.output);
     }
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
+    // libraryName默认为入口文件名
+    if (!option.libraryName) {
+        option.libraryName = Path.basename(option.input).split(".")[0];
+    }
     const plugins = [];
     try {
         const isTs = Path.extname(option.input) === ".ts";
@@ -72,7 +78,7 @@ async function bundleStart(option) {
         const date = new Date();
         const banner = "/*!\n" +
             ` * ${option.libraryName}\n` +
-            ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}\n` +
+            ` * Date: ${date.format("yyyy-MM-dd hh:mm")}\n` +
             ` */\n`;
         if (option.eval) {
             // plugin顺序是从0开始到最后

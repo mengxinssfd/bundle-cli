@@ -52,7 +52,7 @@ const Path = require("path");
         output,
         dropDebugger: has("uglifyDropDebugger"),
         dropConsole: has("uglifyDropConsole"),
-        libraryName: get("libraryName") || String(Date.now()),
+        libraryName: get("libraryName"),
         terser: has("terser"),
         babel: has("babel"),
         uglify: has("uglify"),

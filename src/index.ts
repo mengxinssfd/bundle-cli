@@ -2,7 +2,7 @@ import babel from "@rollup/plugin-babel";
 import {terser} from "rollup-plugin-terser";
 import {minify} from "uglify-js";
 import {Plugin, ModuleFormat} from "rollup";
-
+import {useDateFormat} from "./utils";
 const {uglify} = require("rollup-plugin-uglify");
 const resolve = require("rollup-plugin-node-resolve");
 const rollup = require("rollup");
@@ -21,6 +21,7 @@ type Option = {
     module?: ModuleFormat;
     eval?: boolean;
 }
+useDateFormat();
 export default async function bundleStart(option: Option) {
     if (!option.input || !Fs.existsSync(option.input)) {
         throw new Error(`entry: ${option.input} is not exists`);
@@ -33,6 +34,11 @@ export default async function bundleStart(option: Option) {
         console.log("default output path: ", option.output);
     }
     const isExistBabelRc = Fs.existsSync(babelRcPathTo);
+
+    // libraryName默认为入口文件名
+    if (!option.libraryName) {
+        option.libraryName = Path.basename(option.input).split(".")[0];
+    }
 
     const plugins: Plugin[] = [];
     try {
@@ -90,7 +96,7 @@ export default async function bundleStart(option: Option) {
         const banner =
             "/*!\n" +
             ` * ${option.libraryName}\n` +
-            ` * Date: ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}\n` +
+            ` * Date: ${date.format("yyyy-MM-dd hh:mm")}\n` +
             ` */\n`;
 
         if (option.eval) {
@@ -99,7 +105,7 @@ export default async function bundleStart(option: Option) {
                 name: "",
                 renderChunk(code) {
                     const packer = require("../packer");
-                    return banner+packer.pack(code, true);
+                    return banner + packer.pack(code, true);
                 }
             });
         }

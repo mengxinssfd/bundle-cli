@@ -74,3 +74,44 @@ export function createEnumByObj<T extends object, K extends keyof T, O extends {
     // Object.seal(result); // seal值可以变
     return res;
 }
+
+
+/**
+ * 格式化日期  到date原型上用 不能import导入调用 或者用call apply
+ * @param [format="yyyy-MM-dd hh:mm:ss"]
+ * @returns String
+ */
+export function formatDate(this: Date, format = "yyyy-MM-dd hh:mm:ss"): string {
+    let o: any = {
+        "M+": this.getMonth() + 1,                    //月份
+        "d+": this.getDate(),                         //日
+        "h+": this.getHours(),                        //小时
+        "m+": this.getMinutes(),                      //分
+        "s+": this.getSeconds(),                      //秒
+    };
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    for (let k in o) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            const s1 = RegExp.$1;
+            const v = o[k];
+            const value = s1.length === 1 ? v : ("00" + v).substr(String(v).length);
+            format = format.replace(s1, value);
+        }
+    }
+    return format;
+}
+
+declare global {
+    interface Date {
+        /**
+         * @param [format="yyyy-MM-dd hh:mm:ss"]
+         */
+        format(format?: string): string;
+    }
+}
+// 挂载到Date原型
+export function useDateFormat(force = false) {
+    (!Date.prototype.format || force) && (Date.prototype.format = formatDate);
+}
