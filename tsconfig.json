@@ -2,18 +2,26 @@
   "compilerOptions": {
     "module": "ESNext",
     "target": "ES2017",
-    "sourceMap": false,
+    "sourceMap": true,
     "allowJs": true,
-    "strict": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "forceConsistentCasingInFileNames": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
+    "importHelpers": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "moduleResolution": "Node"
+    "esModuleInterop": true,
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "lib": [
-    "es6",
-    "ESNext"
-  ],
-  "include": [
-    "src"
-  ]
+  "lib": ["es6", "ESNext"],
+  "include": ["src", "__test__"]
 }

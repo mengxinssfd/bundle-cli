@@ -1,7 +1,7 @@
-import * as utils from "./utils";
+import * as utils from './utils';
 
 console.log(utils.inRange(100, [20]));
-debugger
+debugger;
 console.log(utils.isArray({}));
 console.log(utils.isArray(utils.isNumber([])));
 const a = 10;
@@ -11,4 +11,4 @@ console.log(b);
 const rand = Math.random();
 console.log(rand);
 
-export * from "./utils";
+export * from './utils';
