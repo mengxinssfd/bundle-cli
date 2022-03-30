@@ -1,5 +1,5 @@
-import Terser from '@/handlers/Terser';
-import { Options } from '@/types/type';
+import Terser from '../../src/handlers/Terser';
+import { Options } from '../../src/types/type';
 import { TestLoadPlugin } from './CommonLoadPlugin';
 
 describe('Terser', () => {

@@ -18,10 +18,7 @@
     "esModuleInterop": true,
     "incremental": true,
     "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "baseUrl": "."
   },
   "lib": ["es6", "ESNext"],
   "include": ["src", "__test__"]

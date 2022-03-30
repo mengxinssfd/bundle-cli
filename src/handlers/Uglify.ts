@@ -1,4 +1,4 @@
-import Observer from '@/Observer/Observer';
+import Observer from '../Observer/Observer';
 import { minify } from 'uglify-js';
 const { uglify } = require('rollup-plugin-uglify');
 

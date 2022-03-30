@@ -5,8 +5,8 @@ module.exports = {
   },
   /* 优先级低于parse的语法解析配置 */
   parserOptions: {
-    parser: '@typescript-eslint/parser',
-    project: 'tsconfig.json',
+//    parser: '@typescript-eslint/parser',
+//    project: 'tsconfig.json',
     sourceType: 'module',
   },
   extends: [

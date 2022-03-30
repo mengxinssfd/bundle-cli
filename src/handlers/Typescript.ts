@@ -1,4 +1,4 @@
-import Observer from '@/Observer/Observer';
+import Observer from '../Observer/Observer';
 import Path from 'path';
 
 export default class Typescript extends Observer {

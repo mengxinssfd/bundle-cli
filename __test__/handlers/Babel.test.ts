@@ -1,6 +1,6 @@
-import HandlerSubject from '@/Observer/HandlerSubject';
-import { Options } from '@/types/type';
-import Babel from '@/handlers/Babel';
+import HandlerSubject from '../../src/Observer/HandlerSubject';
+import { Options } from '../../src/types/type';
+import Babel from '../../src/handlers/Babel';
 
 describe('Babel', () => {
   const options: Options = {

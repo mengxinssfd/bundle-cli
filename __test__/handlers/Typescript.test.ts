@@ -1,6 +1,6 @@
-import { Options } from '@/types/type';
+import { Options } from '../../src/types/type';
 import { TestLoadPlugin } from './CommonLoadPlugin';
-import Typescript from "@/handlers/Typescript";
+import Typescript from "../../src/handlers/Typescript";
 
 describe('Typescript', () => {
   const options: Options = {

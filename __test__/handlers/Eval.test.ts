@@ -1,6 +1,6 @@
-import { Options } from '@/types/type';
+import { Options } from '../../src/types/type';
 import { TestLoadPlugin } from './CommonLoadPlugin';
-import Eval from "@/handlers/Eval";
+import Eval from "../../src/handlers/Eval";
 
 describe('Eval', () => {
   const options: Options = {

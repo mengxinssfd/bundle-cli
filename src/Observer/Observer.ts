@@ -1,4 +1,4 @@
-import type { Options } from '@/types/type';
+import type { Options } from '../types/type';
 import type { Plugin } from 'rollup';
 
 export default abstract class Observer {

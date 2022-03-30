@@ -1,5 +1,5 @@
-import Observer from '@/Observer/Observer';
-import type { Options } from '@/types/type';
+import Observer from '../Observer/Observer';
+import type { Options } from '../types/type';
 import resolve from 'rollup-plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import Path from 'path';

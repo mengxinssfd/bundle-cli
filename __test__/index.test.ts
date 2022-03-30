@@ -1,5 +1,5 @@
-import bundleStart from '@/index';
-import { Options } from '@/types/type';
+import bundleStart from '../src/index';
+import { Options } from '../src/types/type';
 const Path = require('path');
 const Fs = require('fs');
 
@@ -18,7 +18,7 @@ describe('bundleStart', () => {
     eval: false,
     banner: '',
   };
-  test('base', async () => {
+  /* test('base', async () => {
     const res = await bundleStart({ ...commonOptions }, true);
 
     // console.log(res);
@@ -26,7 +26,7 @@ describe('bundleStart', () => {
     expect(typeof res === 'string').toBeTruthy();
 
     // expect(res.match(/\bconst\b/)?.length).toBeGreaterThan(10);
-  });
+  }); */
   test('判断是否生成了文件', async () => {
     await bundleStart({
       input: inputPath,

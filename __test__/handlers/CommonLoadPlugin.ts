@@ -1,6 +1,6 @@
-import HandlerSubject from '@/Observer/HandlerSubject';
-import { Options } from '@/types/type';
-import Observer from '@/Observer/Observer';
+import HandlerSubject from '../../src/Observer/HandlerSubject';
+import { Options } from '../../src/types/type';
+import Observer from '../../src/Observer/Observer';
 
 export function TestLoadPlugin({
   name,

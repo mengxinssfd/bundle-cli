@@ -1,6 +1,6 @@
-import type Subject from '@/Observer/Subject';
-import Observer from '@/Observer/Observer';
-import type { Options } from '@/types/type';
+import type Subject from './Subject';
+import Observer from './Observer';
+import type { Options } from '../types/type';
 import type { Plugin } from 'rollup';
 
 export default class HandlerSubject implements Subject {

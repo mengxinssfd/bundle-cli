@@ -1,4 +1,4 @@
-import Observer from '@/Observer/Observer';
+import Observer from '../Observer/Observer';
 
 export default class Eval extends Observer {
 

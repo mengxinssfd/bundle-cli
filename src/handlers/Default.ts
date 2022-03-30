@@ -1,8 +1,8 @@
-import Observer from '@/Observer/Observer';
+import Observer from '../Observer/Observer';
 import Path from 'path';
 import Fs from 'fs';
 import { formatDate } from '@mxssfd/ts-utils';
-import { Options } from '@/types/type';
+import { Options } from '../types/type';
 
 export default class Default extends Observer {
   handleBanner(options: Options) {

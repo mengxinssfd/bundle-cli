@@ -1,4 +1,4 @@
-import Observer from '@/Observer/Observer';
+import Observer from '../Observer/Observer';
 import { terser } from 'rollup-plugin-terser';
 
 export default class Terser extends Observer {

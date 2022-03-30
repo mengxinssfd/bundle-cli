@@ -1,6 +1,6 @@
-import { Options } from '@/types/type';
+import { Options } from '../../src/types/type';
 import { TestLoadPlugin } from './CommonLoadPlugin';
-import Uglify from '@/handlers/Uglify';
+import Uglify from '../../src/handlers/Uglify';
 
 describe('Uglify', () => {
   const options: Options = {

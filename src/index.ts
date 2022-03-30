@@ -2,13 +2,13 @@ import { OutputOptions } from 'rollup';
 
 const rollup = require('rollup');
 import type { Options } from './types/type';
-import Handle from '@/Observer/HandlerSubject';
-import Terser from '@/handlers/Terser';
-import Uglify from '@/handlers/Uglify';
-import Typescript from '@/handlers/Typescript';
-import Babel from '@/handlers/Babel';
-import Eval from '@/handlers/Eval';
-import Default from '@/handlers/Default';
+import Handle from './Observer/HandlerSubject';
+import Terser from './handlers/Terser';
+import Uglify from './handlers/Uglify';
+import Typescript from './handlers/Typescript';
+import Babel from './handlers/Babel';
+import Eval from './handlers/Eval';
+import Default from './handlers/Default';
 
 export default async function bundleStart(options: Options): Promise<undefined>;
 export default async function bundleStart(options: Options, isReturnOutput: true): Promise<string>;
