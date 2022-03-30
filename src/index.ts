@@ -1,3 +1,5 @@
+import { OutputOptions } from 'rollup';
+
 const rollup = require('rollup');
 import type { Options } from './types/type';
 import Handle from '@/Observer/HandlerSubject';
@@ -32,16 +34,18 @@ export default async function bundleStart(options: Options, isReturnOutput = fal
       input: options.input, // 入口文件
       plugins: subject.getPlugins(),
     });
-    const { output: outputs } = await rs.write({
+    const outputOptions: OutputOptions = {
       name: options.libraryName, // umd 模式必须要有 name  此属性作为全局变量访问打包结果
       file: options.output,
       banner: options.banner,
       format: typeof options.module === 'string' ? options.module : 'umd',
       sourcemap: false,
-    });
+    };
     if (isReturnOutput) {
+      const { output: outputs } = await rs.generate(outputOptions);
       return outputs[0]?.code;
     }
+    await rs.write(outputOptions);
   } finally {
     subject.notifyDestroy();
   }

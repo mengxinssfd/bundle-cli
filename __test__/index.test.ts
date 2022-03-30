@@ -1,6 +1,5 @@
 import bundleStart from '@/index';
 const Path = require('path');
-const Fs = require('fs');
 
 test('bundleStart', async () => {
   const code = await bundleStart(
@@ -20,5 +19,4 @@ test('bundleStart', async () => {
     true,
   );
   console.log(code);
-  Fs.rmSync(Path.resolve(__dirname, '../test/index.min.js'));
 });
