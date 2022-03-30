@@ -8,7 +8,7 @@ export default class Eval extends Observer {
       plugins.push({
         name: '',
         renderChunk: (code: any) => {
-          const packer = require('../packer');
+          const packer = require('../../packer');
           return options.banner + packer.pack(code, true);
         },
       });

@@ -11,4 +11,6 @@ console.log(b);
 const rand = Math.random();
 console.log(rand);
 
+console.log(utils.arrowFn());
+
 export * from './utils';

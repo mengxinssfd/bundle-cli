@@ -38,7 +38,7 @@ export default async function bundleStart(options: Options, isReturnOutput = fal
       name: options.libraryName, // umd 模式必须要有 name  此属性作为全局变量访问打包结果
       file: options.output,
       banner: options.banner,
-      format: typeof options.module === 'string' ? options.module : 'umd',
+      format: options.module || 'umd',
       sourcemap: false,
     };
     if (isReturnOutput) {
