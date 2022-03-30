@@ -11,7 +11,10 @@
     "packer/index.js"
   ],
   "scripts": {
-    "test": "rollup -c"
+    "test": "rollup -c",
+    "jest:test": "jest",
+    "jest:cov": "jest --coverage",
+    "build": "tsc --project tsconfig.build.json"
   },
   "repository": {
     "type": "git",
