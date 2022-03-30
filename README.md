@@ -1,7 +1,12 @@
 # bundle-cli
-compress js使用rollup压缩js，如果入口是typescript文件，那么会自动开启ts打包
+
+主要实现了在非构建环境下，无需配置，只通过命令对 js 或 ts 文件进行打包、babel 转译、压缩、混淆等功能
+
+使用 rollup 打包压缩 js，如果入口是 typescript 文件，那么会自动开启 ts 打包。
+
 # 命令
-```shell
+
+```
 -input/-i                      文件入口
 -output/-o                     输出文件
 -module/-m                     模块类型
@@ -14,41 +19,60 @@ compress js使用rollup压缩js，如果入口是typescript文件，那么会自
 -uglifyDropConsole/-udc        移除console,需开启uglify
 -eval/-e                       eval parker混淆模式
 ```
+
 ## 安装
-```shell
+
+```
 npm i -g @mxssfd/bundle-cli
 ```
+
 ## 使用
-```shell
+
+```
 bundle-cli inputPath outputPath
 ```
+
 如果输出文件名不填，则为输入文件名.min.js
 或
-```shell
+
+```
 bundle-cli -input path -output path
 ```
+
 ## 压缩
-```shell
+
+```
 bundle-cli inputPath outputPath -terser
 ```
+
 ## babel
-```shell
+
+```
 bundle-cli inputPath outputPath -babel
 ```
+
 ## uglify
-```shell
+
+```
 bundle-cli inputPath outputPath -uglify
 ```
-去除debugger
-```shell
+
+去除 debugger
+
+```
 bundle-cli inputPath outputPath -udd
 ```
-去除console
-```shell
+
+去除 console
+
+```
 bundle-cli inputPath outputPath -udd
 ```
+
 ## eval
-eval混淆
-```shell
+
+eval 混淆
+
+```
 bundle-cli inputPath outputPath -eval
 ```
