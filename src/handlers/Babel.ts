@@ -29,7 +29,7 @@ export default class Babel extends Observer {
       this.isExistBabelRc = isExistBabelRc;
       this.babelRcPathTo = babelRcPathTo;
       if (!isExistBabelRc) {
-        const envPath = Path.resolve(__dirname, '../node_modules/@babel/preset-env');
+        const envPath = Path.resolve(__dirname, '../../node_modules/@babel/preset-env');
         // console.log("env path: ", envPath);
         const tpl = `{"presets": [["${envPath}", {"modules": false, "loose": true}]]}`;
         Fs.writeFileSync(babelRcPathTo, tpl.replace(/\\/g, '/'));

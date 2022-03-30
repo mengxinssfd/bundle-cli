@@ -3,6 +3,14 @@ const { pathsToModuleNameMapper } = require('ts-jest');
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  collectCoverageFrom: [
+    "src/**",
+    "!**/packer/**",
+    "!**/src/utils.ts",
+    "!**/src/index.bin.ts",
+    "!**/src/types/**",
+    "!**/src/Observer/**",
+  ],
   coverageThreshold: {
     global: {
       branches: 50,
