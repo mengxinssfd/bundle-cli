@@ -83,3 +83,12 @@ eval 混淆
 ```
 bundle-cli inputPath outputPath -eval
 ```
+
+## 模块类型
+默认使用的是`umd`模块打包，可以使用`es`,`amd`,`commonjs`等模块打包。  
+
+`umd`模式下会生成`libraryName`暴露出模块名，如`vue`会在`window`下暴露出`Vue`这个库名,然后可以使用类似`Vue.createApp`等方法  
+
+如果`umd`模式下原文件未`export`暴露出函数，那么不会生成`libraryName`
+
+`注意!!!!!`  部分库会和`umd`冲突，如`monaco-editor`,此时使用`es`打包即可，不过`es`打包会污染`window`, 不影响的情况下还是推荐`umd`
