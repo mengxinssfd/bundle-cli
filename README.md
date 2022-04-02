@@ -9,12 +9,12 @@
 ```
 -input/-i                      文件入口
 -output/-o                     输出文件
--module/-m                     模块类型
+-module/-m                     模块类型(默认umd)
 -help/-h                       帮助
--terser/-t                     压缩
--babel/-b                      开启babel
--libraryName/-name             打包后的名字,默认是时间戳
--uglify/-u                     开启uglify
+-terser/-t                     普通压缩
+-babel/-b                      开启babel(es6+转es5)
+-libraryName/-name             打包后的名字,默认是文件名(umd模式)
+-uglify/-u                     开启uglifyjs(丑化js)
 -uglifyDropDebugger/-udd       移除debugger,需开启uglify
 -uglifyDropConsole/-udc        移除console,需开启uglify
 -eval/-e                       eval parker混淆模式
@@ -39,19 +39,19 @@ bundle-cli inputPath outputPath
 bundle-cli -input path -output path
 ```
 
-## 压缩
+## 普通压缩(不是很推荐，推荐babel+uglify)
 
 ```
 bundle-cli inputPath outputPath -terser
 ```
 
-## babel
+## babel(es6及以上转es5，部分特性需要自己加上polyfill)
 
 ```
 bundle-cli inputPath outputPath -babel
 ```
 
-## uglify
+## uglify(丑化js代码)
 
 ```
 bundle-cli inputPath outputPath -uglify
