@@ -39,26 +39,27 @@ bundle-cli inputPath outputPath
 bundle-cli -input path -output path
 ```
 
-## 普通压缩(不是很推荐，推荐babel+uglify)
+## 普通压缩(不是很推荐，推荐 babel+uglify)
 
 ```
 bundle-cli inputPath outputPath -terser
 ```
 
-## babel(es6及以上转es5，部分特性需要自己加上polyfill)
+## babel(es6 及以上转 es5，部分特性需要自己加上 polyfill)
 
 ```
 bundle-cli inputPath outputPath -babel
 ```
 
-`注意!!!!!` es7的async await转成es5需要一个polyfill，否则会报错   
+`注意!!!!!` es7 的 async await 转成 es5 需要一个 polyfill，否则会报错
 
-在前面加上`regenerator-runtime`polyfill库即可
+在前面加上`regenerator-runtime`polyfill 库即可
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.9/runtime.min.js"></script>
 ```
 
-## uglify(丑化js代码)
+## uglify(丑化 js 代码)
 
 ```
 bundle-cli inputPath outputPath -uglify
@@ -85,10 +86,53 @@ bundle-cli inputPath outputPath -eval
 ```
 
 ## 模块类型
-默认使用的是`umd`模块打包，可以使用`es`,`amd`,`commonjs`等模块打包。  
 
-`umd`模式下会生成`libraryName`暴露出模块名，如`vue`会在`window`下暴露出`Vue`这个库名,然后可以使用类似`Vue.createApp`等方法  
+默认使用的是`umd`模块打包，可以选择`es`,`amd`,`commonjs`等模块类型打包。
+
+`umd`模式下会生成`libraryName`暴露出模块名，如`vue`会在`window`下暴露出`Vue`这个库名,然后可以使用类似`Vue.createApp`等方法
 
 如果`umd`模式下原文件未`export`暴露出函数，那么不会生成`libraryName`
 
-`注意!!!!!`  部分库会和`umd`冲突，如`monaco-editor`,此时使用`es`打包即可，不过`es`打包会污染`window`, 不影响的情况下还是推荐`umd`
+`注意!!!!!` 部分库会和`umd`冲突，如`monaco-editor`,此时使用`es`打包即可，不过`es`打包会污染`window`, 不影响的情况下还是推荐`umd`
+
+## 通过编辑器快捷键使用命令一键打包
+
+### webstorm
+
+`设置`>`外部工具`>`添加外部工具`
+并依次填入
+
+```
+名称：bundle-cli(随意)
+程序：npm全局安装下的bundle-cli.cmd
+实参：$FilePath$ -b -u -udc -udd -e
+工作目录：$FileDir$
+```
+
+`$FilePath$`为`webstorm`当前打开的文件或目录下鼠标选中的文件  
+然后打开要打包的文件，右键选择`外部工具`|`external tools`找到`bundle-cli`鼠标点击就能打包了
+
+添加快捷键：打开`设置`>`键盘映射`找到`外部工具`>`external tools`>`bundle-cli`，添加快捷键，然后就可以通过设置的快捷键一键打包
+
+### vscode
+
+快捷键`ctrl`+`shift`+`b`打开任务弹窗，新建一个任务并填写以下
+
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "bundle-cli",
+      "command": "bundle-cli ${file} -b -u -udc -udd -e"
+    }
+  ]
+}
+```
+
+`${file}`为`vscode`当前打开的文件
+
+打开要打包的文件，然后使用`ctrl`+`shift`+`b`快捷键选中`bundle-cli`，就完成了，免除了繁琐的命令输入
