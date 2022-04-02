@@ -104,19 +104,21 @@ bundle-cli inputPath outputPath -eval
 
 ```
 名称：bundle-cli(随意)
-程序：npm全局安装下的bundle-cli.cmd
+程序：必须从npm全局安装目录下查找到bundle-cli.cmd
 实参：$FilePath$ -b -u -udc -udd -e
 工作目录：$FileDir$
 ```
 
 `$FilePath$`为`webstorm`当前打开的文件或目录下鼠标选中的文件  
+`$FileDir$`为`webstorm`当前打开的文件所在目录，供`babel`使用
+
 然后打开要打包的文件，右键选择`外部工具`|`external tools`找到`bundle-cli`鼠标点击就能打包了
 
 添加快捷键：打开`设置`>`键盘映射`找到`外部工具`>`external tools`>`bundle-cli`，添加快捷键，然后就可以通过设置的快捷键一键打包
 
 ### vscode
 
-快捷键`ctrl`+`shift`+`b`打开任务弹窗，新建一个任务并填写以下
+快捷键`ctrl` + `shift` + `b`打开任务弹窗，新建一个任务并填写以下
 
 ```json
 {
@@ -135,4 +137,8 @@ bundle-cli inputPath outputPath -eval
 
 `${file}`为`vscode`当前打开的文件
 
-打开要打包的文件，然后使用`ctrl`+`shift`+`b`快捷键选中`bundle-cli`，就完成了，免除了繁琐的命令输入
+打开要打包的文件，然后再次使用`ctrl` + `shift` + `b`打开任务窗口，并选中刚才设置的任务并选中`bundle-cli`，那么就命令就完成了。  
+
+使用编辑器快捷键免除了每次都要输入繁琐的命令
+
+更多配置可参考 [vscode 官方配置](https://code.visualstudio.com/docs/editor/tasks)
