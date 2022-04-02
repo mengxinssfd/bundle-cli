@@ -13,4 +13,12 @@ console.log(rand);
 
 console.log(utils.arrowFn());
 
+async function testAsync(){
+  return Promise.all([1,2]);
+}
+
+(async function(){
+  console.log(await testAsync());
+})()
+
 export * from './utils';

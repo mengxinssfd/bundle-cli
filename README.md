@@ -51,6 +51,13 @@ bundle-cli inputPath outputPath -terser
 bundle-cli inputPath outputPath -babel
 ```
 
+`注意!!!!!` es7的async await转成es5需要一个polyfill，否则会报错   
+
+在前面加上`regenerator-runtime`polyfill库即可
+```html
+<script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.9/runtime.min.js"></script>
+```
+
 ## uglify(丑化js代码)
 
 ```
